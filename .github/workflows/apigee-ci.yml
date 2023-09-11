@@ -80,10 +80,10 @@ jobs:
 
 
   # Deploy Apigee Config (Apigee [Config] Maven plugin)
-      - name: mvn deploy config xhybrid
+      - name: mvn deploy config
         if: env.API_VERSION == 'googleapi'
         run:  |
-          sed -i "s/target_apigee_env/$APIGEE_ENV/g" ./EdgeConfig/edge.json
+          sed -i "s/target_apigee_env/$APIGEE_ENV/g" config.json
           cat sa.json
           mvn install -Ptest -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV -Dfile=sa.json
 
