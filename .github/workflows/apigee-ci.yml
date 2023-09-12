@@ -24,36 +24,18 @@ env:
 
 jobs:
   Apigee-Deploy:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-
-  # Set Variables depending on branch
-      - name: Set Variables for [Main] branch
-        if: github.ref == 'refs/heads/main'
-        run: |
-          echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-          echo "APIGEE_ENV=$(echo $DEFAULT_APIGEE_ENV)" >> $GITHUB_ENV
-
-      - name: Set Variables for [Prod] branch
-        if: github.ref == 'refs/heads/prod'
-        run: |
-          echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-          echo "APIGEE_ENV=prod)" >> $GITHUB_ENV
-  
-      - name: Set Variables for branch not [Main], not [Prod]
-        if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
-        run: |
-          echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo $GITHUB_REF | sed 's/.*\///')" >> $GITHUB_ENV
-          echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-          echo "APIGEE_ENV=$(echo $DEFAULT_APIGEE_ENV)" >> $GITHUB_ENV
-
-
+      - id: auth
+        uses: google-github-actions/auth@v0.4.0
+        with:
+          token_format: "access_token"
+          create_credentials_file: true
+          activate_credentials_file: true
+          workload_identity_provider: projects/735293554042/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+          service_account: my-service-account@dark-garden-398406.iam.gserviceaccount.com
 
   # Setup Maven & Maven Cache
       - name: Set up JDK 1.8
@@ -84,6 +66,7 @@ jobs:
         run:  |
           sed -i "s/target_apigee_env/$APIGEE_ENV/g" config.json
           cat sa.json
-          mvn install -Ptest -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV -Dfile=sa.json
+          mvn clean install -Ptest -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV -Dbearer=$(gcloud auth print-access-token) -DgoogleTokenEmail=my-service-account@dark-garden-398406.iam.gserviceaccount.com
+          
 
 
