@@ -6,21 +6,14 @@ on: push
 env:
   API_VERSION: googleapi 
   
-  DEFAULT_APIGEE_ORG: dark-garden-398406
-  DEFAULT_APIGEE_ENV: eval
+  APIGEE_ORG: dark-garden-398406
+  APIGEE_ENV: eval
   TEST_HOST: 34.111.231.70.nip.io
 
   # Retrieve Apigee UserID and password from repository settings (secrets)
   APIGEE_CREDS_USR: ${{ secrets.APIGEE_CREDS_USR }}
   APIGEE_CREDS_PSW: ${{ secrets.APIGEE_CREDS_PSW }}
-  GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-
-  # These variables will be dynamically defined in [Set Variables *] steps
-  AUTHOR_EMAIL: ''
-  APIGEE_ORG: ''
-  APIGEE_ENV: ''
-  APIGEE_DEPLOYMENT_SUFFIX: ''
-  
+  GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}  
 
 jobs:
   Apigee-Deploy:
