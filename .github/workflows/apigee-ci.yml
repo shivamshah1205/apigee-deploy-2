@@ -63,7 +63,7 @@ jobs:
         run:  |
           sed -i "s/target_apigee_env/$APIGEE_ENV/g" config.json
           cat sa.json
-          mvn clean install -Ptest -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV -Dbearer=$(gcloud auth print-access-token) -DgoogleTokenEmail=my-service-account@dark-garden-398406.iam.gserviceaccount.com
+          mvn clean install -Ptest -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV -Dbearer=${{ steps.auth.outputs.access_token }}
           
 
 
