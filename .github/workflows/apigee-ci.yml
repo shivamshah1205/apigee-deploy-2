@@ -32,7 +32,7 @@ jobs:
           create_credentials_file: true
           activate_credentials_file: true
           workload_identity_provider: projects/735293554042/locations/global/workloadIdentityPools/my-pool/providers/my-provider
-          service_account: 735293554042-compute@developer.gserviceaccount.com
+          service_account: my-service-account@dark-garden-398406.iam.gserviceaccount.com
 
   # Setup Maven & Maven Cache
       - name: Set up JDK 1.8
